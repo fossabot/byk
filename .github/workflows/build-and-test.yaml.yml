@@ -6,7 +6,7 @@ on:
       - 'master'
     paths:
       - 'byk/**'
-      - '.github/workflows/reusable-build-image.yml'
+      - '.github/workflows/**'
       - 'Dockerfile'
       - 'requirements.txt'
   push:
@@ -16,7 +16,7 @@ on:
       - 'v*'
     paths:
       - 'byk/**'
-      - '.github/workflows/reusable-build-image.yml'
+      - '.github/workflows/**'
       - 'Dockerfile'
       - 'requirements.txt'
 
