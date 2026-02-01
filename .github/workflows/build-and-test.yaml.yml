@@ -1,4 +1,4 @@
-name: build-and-test.yaml
+name: Build, Test, and Publish Docker Image
 run-name: Build Docker Image and Run Test
 on:
   pull_request:
@@ -20,10 +20,6 @@ on:
       - 'Dockerfile'
       - 'requirements.txt'
 
-env:
-  REGISTRY: registry.digitalocean.com/lgtkom
-  IMAGE_NAME: byk-server
-
 jobs:
   prepare:
     runs-on: ubuntu-latest
@@ -39,7 +35,7 @@ jobs:
       id: meta
       uses: docker/metadata-action@v5
       with:
-        images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
+        images: ${{ vars.DOCKER_REGISTRY }}/${{ vars.IMAGE_NAME }}
         tags: |
           type=ref,event=tag
           type=edge,branch=master
@@ -50,8 +46,8 @@ jobs:
     needs: prepare
     uses: ./.github/workflows/reusable-build-image.yml
     with:
-      registry: ${{ env.REGISTRY }}
-      image_name: ${{ env.IMAGE_NAME }}
+      registry: ${{ vars.DOCKER_REGISTRY }}
+      image_name: ${{ vars.IMAGE_NAME }}
       image_tag: ${{ needs.prepare.outputs.tags }}
     secrets:
       DOCKER_HUB_USERNAME: ${{ secrets.DOCKER_HUB_USERNAME }}
@@ -61,8 +57,8 @@ jobs:
     needs: build
     uses: ./.github/workflows/reusable-run-tests.yaml.yml
     with:
-      registry: ${{ env.REGISTRY }}
-      image_name: ${{ env.IMAGE_NAME }}
+      registry: ${{ vars.DOCKER_REGISTRY }}
+      image_name: ${{ vars.IMAGE_NAME }}
       image_tag: ${{ needs.prepare.outputs.tags }}
 
   publish:
@@ -75,7 +71,7 @@ jobs:
       - name: Log in to Docker Hub
         uses: docker/login-action@v3
         with:
-          registry: ${{ env.REGISTRY }}
+          registry: ${{ vars.DOCKER_REGISTRY }}
           username: ${{ secrets.DOCKER_HUB_USERNAME }}
           password: ${{ secrets.DOCKER_HUB_ACCESS_TOKEN }}
 
@@ -84,4 +80,4 @@ jobs:
         with:
           context: .
           push: true
-          tags: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ needs.prepare.outputs.tags }}
+          tags: ${{ vars.DOCKER_REGISTRY }}/${{ vars.IMAGE_NAME }}:${{ needs.prepare.outputs.tags }}
