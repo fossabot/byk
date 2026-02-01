@@ -1,4 +1,6 @@
 # byk (Book)
+[![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2FJunzki%2Fbyk.svg?type=shield)](https://app.fossa.com/projects/git%2Bgithub.com%2FJunzki%2Fbyk?ref=badge_shield)
+
 
 A simple book manager.
 
@@ -44,6 +46,9 @@ Please refer to [docker-compose.yml](docker-compose.yml) for an example of setti
 
 ## License
 This project is licensed under the **GNU General Public License v3 (GPLv3)**.
+
+
+[![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2FJunzki%2Fbyk.svg?type=large)](https://app.fossa.com/projects/git%2Bgithub.com%2FJunzki%2Fbyk?ref=badge_large)
 
 ### Third-party Component Notices
 The module [`byk/nlc_isbn`](byk-server/nlc_isbn/README.md) contains code derived from [DoiiarX/NLCISBNPlugin](https://github.com/DoiiarX/NLCISBNPlugin) 
