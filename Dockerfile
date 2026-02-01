@@ -4,7 +4,7 @@ LABEL authors="andrija"
 WORKDIR app
 COPY requirements.txt /app/requirements.txt
 
-ENV PIP_INDEX_URL "https://pypi.tuna.tsinghua.edu.cn/simple"
+ENV PIP_INDEX_URL="https://pypi.tuna.tsinghua.edu.cn/simple"
 
 RUN python -m pip install --no-cache-dir --upgrade pip && \
     pip install --no-cache-dir -r requirements.txt && \
@@ -19,8 +19,8 @@ FROM base AS final
 
 COPY byk-server /app
 
-ENV DEBUG false
-ENV DJANGO_SETTINGS_MODULE byk.settings_env
+ENV DEBUG=false
+ENV DJANGO_SETTINGS_MODULE=byk.settings_env
 
 EXPOSE 8000
 CMD ["hypercorn", "byk.asgi:application", "--bind", "0.0.0.0:8000"]

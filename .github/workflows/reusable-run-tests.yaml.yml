@@ -24,10 +24,12 @@ jobs:
           load: true  # Loads it into the local daemon for testing
 
       - name: Start Services (Postgres and Redis)
+        env:
+          IMAGE_TAG: ${{ inputs.image_tag }}
         run: |
           docker compose \
             -f docker-compose.test.yml \
-            -e IMAGE_TAG=${{ inputs.image_tag }} \
+            -e IMAGE_TAG=${IMAGE_TAG} \
             up -d postgres redis
 
       - name: Wait for Services to be Ready
@@ -46,12 +48,13 @@ jobs:
         timeout-minutes: 2
 
       - name: Run Tests
-#        env:
-#          IMAGE_TAG: ${{ inputs.image_tag }}
+        env:
+          IMAGE_TAG: ${{ inputs.image_tag }}
         run: |
           docker compose -f docker-compose.test.yml run \
           --rm \
           --no-deps \
-          -e IMAGE_TAG=${{ inputs.image_tag }} \
+          -e IMAGE_TAG=${IMAGE_TAG} \
+          -e DEBUG=True \
           --entrypoint "python manage.py test -v 2" \
           byk-server
