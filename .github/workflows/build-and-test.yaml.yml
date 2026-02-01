@@ -5,7 +5,7 @@ on:
     branches:
       - 'master'
     paths:
-      - 'byk/**'
+      - '../../byk-server/**'
       - '.github/workflows/**'
       - 'Dockerfile'
       - 'requirements.txt'
@@ -15,7 +15,7 @@ on:
     tags:
       - 'v*'
     paths:
-      - 'byk/**'
+      - '../../byk-server/**'
       - '.github/workflows/**'
       - 'Dockerfile'
       - 'requirements.txt'
@@ -51,7 +51,6 @@ jobs:
   test:
     needs:
       - prepare
-      - build
     uses: ./.github/workflows/reusable-run-tests.yaml.yml
     with:
       image_tag: ${{ needs.prepare.outputs.tags }}
@@ -59,8 +58,6 @@ jobs:
   publish:
     needs:
       - prepare
-      - build
-      - test
     if: github.event_name == 'push' && (startsWith(github.ref, 'refs/tags/v') || github.ref == 'refs/heads/master')
     uses: ./.github/workflows/reusable-push-image.yml
     with:

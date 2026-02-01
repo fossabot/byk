@@ -1,5 +1,5 @@
 """
-URL configuration for byk project.
+URL configuration for byk-server project.
 
 The `urlpatterns` list routes URLs to views. For more information please see:
     https://docs.djangoproject.com/en/6.0/topics/http/urls/

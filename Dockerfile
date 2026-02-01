@@ -17,7 +17,7 @@ USER app:app
 
 FROM base AS final
 
-COPY ./byk /app
+COPY byk-server /app
 
 ENV DEBUG false
 ENV DJANGO_SETTINGS_MODULE byk.settings_env

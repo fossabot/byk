@@ -12,22 +12,22 @@ The dev server (`django manage.py runserver`) is already integrated with async s
 For production environment, you can use any kind of ASGI server, e.g., Daphne, Uvicorn, Hypercorn, etc.  
 For example, using Hypercorn:
 ```bash
-hypercorn byk.asgi:application --bind 0.0.0.0:8000
+hypercorn byk-server.asgi:application --bind 0.0.0.0:8000
 ```
 
 You are strongly recommended to use `byk.settings_env` for production, or you can create your own settings module based
 on it.  
 Please make sure to configure database and run migrations prior to exposing the service to public.
 ```bash
-export DJANGO_SETTINGS_MODULE=byk.settings_env  # or your custom settings module
-python byk/manage.py migrate
+export DJANGO_SETTINGS_MODULE=byk-server.settings_env  # or your custom settings module
+python byk-server/manage.py migrate
 ```
 
 
 ### Run Task Worker
 
 ```bash
-faststream run byk.task_broker.app:faststream_app
+faststream run byk-server.task_broker.app:faststream_app
 ```
 
 ## Requirements
@@ -46,7 +46,7 @@ Please refer to [docker-compose.yml](docker-compose.yml) for an example of setti
 This project is licensed under the **GNU General Public License v3 (GPLv3)**.
 
 ### Third-party Component Notices
-The module [`byk/nlc_isbn`](byk/nlc_isbn/README.md) contains code derived from [DoiiarX/NLCISBNPlugin](https://github.com/DoiiarX/NLCISBNPlugin) 
+The module [`byk/nlc_isbn`](byk-server/nlc_isbn/README.md) contains code derived from [DoiiarX/NLCISBNPlugin](https://github.com/DoiiarX/NLCISBNPlugin) 
 (Apache License 2.0). 
 In accordance with the Apache 2.0 license, all original copyright notices are preserved, 
 and modifications are documented. 

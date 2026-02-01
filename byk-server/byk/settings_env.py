@@ -17,7 +17,7 @@ SECRET_KEY = os.getenv('DJANGO_SECRET_KEY', 'your-default-secret-key')
 #                   DO NOT USE THE DEFAULT PASSWORD IN PRODUCTION ENVIRONMENTS!
 POSTGRESQL_HOST = os.getenv('POSTGRESQL_HOST', 'localhost')
 POSTGRESQL_PORT = os.getenv('POSTGRESQL_PORT', '5432')
-POSTGRESQL_NAME = os.getenv('POSTGRESQL_DB', 'byk')
+POSTGRESQL_NAME = os.getenv('POSTGRESQL_DB', 'byk-server')
 POSTGRESQL_USER = os.getenv('POSTGRESQL_USER', 'byk_user')
 POSTGRESQL_PASSWORD = os.getenv('POSTGRESQL_PASSWORD', 'byk_password')
 

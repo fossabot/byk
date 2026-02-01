@@ -23,7 +23,7 @@ jobs:
         id: meta
         uses: docker/metadata-action@v4
         with:
-          images: byk-server
+          images: byk-server-server
           tags: |
             type=ref,event=tag
             type=edge,branch=master

@@ -12,7 +12,7 @@ from byk.kv import redis
 from accounts.models import User
 from accounts.constants import DEFAULT_TENANT
 
-LOG = logging.getLogger("byk")
+LOG = logging.getLogger("byk-server")
 
 TENANT_USERNAME_FAILURE_COUNT = "tenant:{tenant_id}:username:{username}:password_auth_failure_count"
 TENANT_USERNAME_FAILURE_LOCKED = "tenant:{tenant_id}:username:{username}:password_auth_locked"
