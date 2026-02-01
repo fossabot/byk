@@ -27,14 +27,11 @@ jobs:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
 
-#      - name: Download Image from Artifact
-#        uses: actions/download-artifact@v4
-#        with:
-#          name: docker-image-artifact-temp
-#
-#      - name: Load Docker Image
-#        run: |
-#          docker load -i docker-image.tar
+      - name: Build from Cache
+        uses: docker/build-push-action@v6
+        with:
+          cache-from: type=gha
+          load: true  # Loads it into the local daemon for testing
 
       - name: Build and Push Docker image
         uses: docker/build-push-action@v4
