@@ -43,11 +43,12 @@ jobs:
         timeout-minutes: 2
 
       - name: Run Tests
-        env:
-          IMAGE_TAG: ${{ inputs.image_tag }}
+#        env:
+#          IMAGE_TAG: ${{ inputs.image_tag }}
         run: |
           docker-compose -f docker-compose.test.yml run \
           --rm \
           --no-deps \
+          -e IMAGE_TAG=${{ inputs.image_tag }} \
           --entrypoint "python manage.py test -v 2" \
           byk-server
