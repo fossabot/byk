@@ -30,7 +30,7 @@ jobs:
           tags: |
             type=ref,event=tag
             type=raw,value=latest,enable=${{ github.ref == 'refs/heads/master' }}
-            type=sha,format=short,event=pr
+            type=sha,format=short,enable=${{ github.event_name == 'pull_request' }}
           flavor:
             # Disables the automatic 'edge' and 'latest' defaults to keep it clean
             latest=false
