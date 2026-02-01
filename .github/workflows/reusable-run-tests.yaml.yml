@@ -1,0 +1,49 @@
+name: reusable-run-tests.yaml
+on:
+  workflow_call:
+    inputs:
+      registry:
+        required: true
+        type: string
+      image_name:
+        required: true
+        type: string
+      image_tag:
+        required: true
+        type: string
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Start Services (Postgres and Redis)
+        run: |
+          docker compose -f docker-compose.test.yml up -d postgres redis
+
+      - name: Wait for Services to be Ready
+        run: |
+          # Wait for Postgres
+          until docker exec $(docker ps -qf "name=postgres") pg_isready -U postgres; do
+            echo "Waiting for Postgres..."
+            sleep 2
+          done
+          
+          # Wait for Redis
+          until docker exec $(docker ps -qf "name=redis") redis-cli ping | grep PONG; do
+            echo "Waiting for Redis..."
+            sleep 2
+          done
+        timeout-minutes: 2
+
+      - name: Run Tests
+        env:
+          REGISTRY: ${{ inputs.registry }}
+          IMAGE_NAME: ${{ inputs.image_name }}
+          IMAGE_TAG: ${{ inputs.image_tag }}
+        run: |
+          docker-compose -f docker-compose.test.yml run \
+          --rm \
+          --no-deps \
+          --entrypoint "python manage.py test -v 2" \
+          byk-server
