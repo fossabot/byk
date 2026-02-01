@@ -6,9 +6,6 @@ on:
       registry:
         required: true
         type: string
-      image_name:
-        required: true
-        type: string
       image_tag:
         required: true
         type: string
@@ -44,4 +41,4 @@ jobs:
         with:
           context: .
           push: true
-          tags: ${{ inputs.registry }}/${{ inputs.image_name }}:${{ inputs.image_tag }}
+          tags: ${{ inputs.image_tag }}

@@ -2,12 +2,6 @@ name: Reusable Run Tests
 on:
   workflow_call:
     inputs:
-      registry:
-        required: true
-        type: string
-      image_name:
-        required: true
-        type: string
       image_tag:
         required: true
         type: string
@@ -47,8 +41,6 @@ jobs:
 
       - name: Run Tests
         env:
-          REGISTRY: ${{ inputs.registry }}
-          IMAGE_NAME: ${{ inputs.image_name }}
           IMAGE_TAG: ${{ inputs.image_tag }}
         run: |
           docker-compose -f docker-compose.test.yml run \

@@ -45,7 +45,7 @@ services:
       - redisdata:/data
 
   byk-server:
-    image: ${REGISTRY}/${IMAGE_NAME}:${IMAGE_TAG:-latest}
+    image: ${IMAGE_TAG}
     depends_on:
       - postgres
       - redis

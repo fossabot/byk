@@ -3,12 +3,6 @@ run-name: Build Docker Image
 on:
   workflow_call:
     inputs:
-      registry:
-        required: true
-        type: string
-      image_name:
-        required: true
-        type: string
       image_tag:
         required: true
         type: string
@@ -44,7 +38,7 @@ jobs:
         with:
           context: .
           load: true
-          tags: ${{ inputs.registry }}/${{ inputs.image_name }}:${{ inputs.image_tag }}
+          tags: ${{ inputs.image_tag }}
 
       - name: Upload Docker Image as Artifact
         uses: actions/upload-artifact@v4
