@@ -12,7 +12,7 @@ from .base import broker
 
 
 def create_faststream_app() -> FastStream:
-    os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'byk-server.settings')
+    os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'byk.settings')
     print(f"!!! ENV DJANGO_SETTINGS_MODULE: {os.environ.get('DJANGO_SETTINGS_MODULE')}", file=sys.stderr)
 
     django.setup()  # Setup Django to load models, settings and tasks

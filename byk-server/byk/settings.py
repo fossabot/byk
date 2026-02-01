@@ -80,8 +80,8 @@ TEMPLATES = [
     },
 ]
 
-ASGI_APPLICATION = 'byk-server.asgi.application'
-WSGI_APPLICATION = 'byk-server.wsgi.application'
+ASGI_APPLICATION = 'byk.asgi.application'
+WSGI_APPLICATION = 'byk.wsgi.application'
 
 
 # Database
@@ -154,7 +154,7 @@ LOGGING = {
     'disable_existing_loggers': False,
     'filters': {
         'request_tracing': {
-            '()': 'byk-server.logs.RequestTracingFilter',
+            '()': 'byk.logs.RequestTracingFilter',
         }
     },
     'formatters': {
@@ -176,7 +176,7 @@ LOGGING = {
             'handlers': ['console'],
             'level': 'INFO',
         },
-        'byk-server': {
+        'byk': {
             'handlers': ['console'],
             'level': 'DEBUG',
             'propagate': True,

@@ -11,6 +11,6 @@ import os
 
 from django.core.wsgi import get_wsgi_application
 
-os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'byk-server.settings')
+os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'byk.settings')
 
 application = get_wsgi_application()
