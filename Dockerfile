@@ -1,7 +1,7 @@
 FROM python:3.14-alpine AS base
 LABEL authors="andrija"
 
-WORKDIR app
+WORKDIR /app
 COPY requirements.txt /app/requirements.txt
 
 ENV PIP_INDEX_URL="https://pypi.tuna.tsinghua.edu.cn/simple"

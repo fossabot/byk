@@ -2,10 +2,6 @@ name: Reusable Build Image
 run-name: Build Docker Image
 on:
   workflow_call:
-    inputs:
-      image_tag:
-        required: true
-        type: string
 
 jobs:
   build:
@@ -41,7 +37,7 @@ jobs:
         with:
           context: .
           load: true
-          tags: ${{ inputs.image_tag }}
+          tags: ${{ steps.meta.outputs.tags }}
           cache-from: type=gha
           cache-to: type=gha,mode=max
 
