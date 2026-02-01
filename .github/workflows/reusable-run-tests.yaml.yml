@@ -11,14 +11,14 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Download Image from Artifact
-        uses: actions/download-artifact@v4
-        with:
-          name: docker-image-artifact-temp
-
-      - name: Load Docker Image
-        run: |
-          docker load -i docker-image.tar
+#      - name: Download Image from Artifact
+#        uses: actions/download-artifact@v4
+#        with:
+#          name: docker-image-artifact-temp
+#
+#      - name: Load Docker Image
+#        run: |
+#          docker load -i docker-image.tar
 
       - name: Start Services (Postgres and Redis)
         run: |
