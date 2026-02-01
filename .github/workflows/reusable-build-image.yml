@@ -29,9 +29,11 @@ jobs:
           images: ${{ vars.DOCKER_REGISTRY }}/${{ vars.IMAGE_NAME }}
           tags: |
             type=ref,event=tag
-            type=edge,branch=master,enable=false
             type=raw,value=latest,enable=${{ github.ref == 'refs/heads/master' }}
             type=sha,format=short,event=pr
+          flavor:
+            # Disables the automatic 'edge' and 'latest' defaults to keep it clean
+            latest=false
 
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v2
