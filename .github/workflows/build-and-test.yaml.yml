@@ -49,9 +49,6 @@ jobs:
       registry: ${{ vars.DOCKER_REGISTRY }}
       image_name: ${{ vars.IMAGE_NAME }}
       image_tag: ${{ needs.prepare.outputs.tags }}
-    secrets:
-      DOCKER_HUB_USERNAME: ${{ secrets.DOCKER_HUB_USERNAME }}
-      DOCKER_HUB_ACCESS_TOKEN: ${{ secrets.DOCKER_HUB_ACCESS_TOKEN }}
 
   test:
     needs: build

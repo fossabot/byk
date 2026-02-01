@@ -45,3 +45,9 @@ jobs:
           context: .
           load: true
           tags: ${{ inputs.registry }}/${{ inputs.image_name }}:${{ inputs.image_tag }}
+
+      - name: Upload Docker Image as Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: docker-image-artifact-temp
+          path: docker-image.tar
