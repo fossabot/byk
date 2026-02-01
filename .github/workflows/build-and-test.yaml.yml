@@ -5,7 +5,7 @@ on:
     branches:
       - 'master'
     paths:
-      - '../../byk-server/**'
+      - 'byk-server/**'
       - '.github/workflows/**'
       - 'Dockerfile'
       - 'requirements.txt'
@@ -15,7 +15,7 @@ on:
     tags:
       - 'v*'
     paths:
-      - '../../byk-server/**'
+      - 'byk-server/**'
       - '.github/workflows/**'
       - 'Dockerfile'
       - 'requirements.txt'
@@ -42,25 +42,109 @@ jobs:
 #          type=raw,value=latest,enable=${{ github.ref == 'refs/heads/master' }}
 #          type=sha,format=short,event=pr
 
-  build:
-    uses: ./.github/workflows/reusable-build-image.yml
+  Build:
+    name: Build, Test, and Publish Docker Image
+    runs-on: ubuntu-latest
 
-  test:
-    needs:
-      - build
-    uses: ./.github/workflows/reusable-run-tests.yaml.yml
-    with:
-      image_tag: ${{ needs.build.outputs.image_tag }}
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
 
-  publish:
-    needs:
-      - build
-      - test
-    if: github.event_name == 'push' && (startsWith(github.ref, 'refs/tags/v') || github.ref == 'refs/heads/master')
-    uses: ./.github/workflows/reusable-push-image.yml
-    with:
-      registry: ${{ vars.DOCKER_REGISTRY }}
-      image_tag: ${{ needs.build.outputs.image_tag }}
-    secrets:
-      DOCKER_HUB_USERNAME: ${{ secrets.DOCKER_HUB_USERNAME }}
-      DOCKER_HUB_ACCESS_TOKEN: ${{ secrets.DOCKER_HUB_ACCESS_TOKEN }}
+      # This action automatically handles your logic:
+      # 1. If it's a tag (v1.0), it uses that.
+      # 2. If it's master branch, it adds 'latest'.
+      # 3. If it's a PR, it uses 'pr-<number>' or you can customize to SHA.
+      - name: Docker metadata
+        id: meta
+        uses: docker/metadata-action@v4
+        with:
+          images: ${{ vars.DOCKER_REGISTRY }}/${{ vars.IMAGE_NAME }}
+          tags: |
+            type=ref,event=tag
+            type=raw,value=latest,enable=${{ github.ref == 'refs/heads/master' }}
+            type=sha,format=short,enable=${{ github.event_name == 'pull_request' }}
+          flavor:
+            # Disables the automatic 'edge' and 'latest' defaults to keep it clean
+            latest=false
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v2
+
+      - name: Build Docker image
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          load: true
+          tags: ${{ steps.meta.outputs.tags }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+
+      - name: Start Services (Postgres and Redis)
+        env:
+          IMAGE_TAG: ${{ steps.meta.outputs.tags }}
+        run: |
+          docker compose \
+            -f docker-compose.test.yml \
+            up -d postgres redis
+
+      - name: Wait for Services to be Ready
+        run: |
+          # Wait for Postgres
+          until docker exec $(docker ps -qf "name=postgres") pg_isready -U postgres; do
+            echo "Waiting for Postgres..."
+            sleep 2
+          done
+          
+          # Wait for Redis
+          until docker exec $(docker ps -qf "name=redis") redis-cli ping | grep PONG; do
+            echo "Waiting for Redis..."
+            sleep 2
+          done
+        timeout-minutes: 2
+
+      - name: Run Tests
+        env:
+          IMAGE_TAG: ${{ steps.meta.outputs.tags }}
+        run: |
+          docker compose -f docker-compose.test.yml run \
+          --rm \
+          --no-deps \
+          --entrypoint "python manage.py test -v 2" \
+          byk-server
+
+      - name: Log in to Docker Hub
+        uses: docker/login-action@v2
+        with:
+          registry: ${{ inputs.registry }}
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
+
+      - name: Build and Push Docker image
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          push: true
+          tags: ${{ inputs.image_tag }}
+
+
+    #    uses: ./.github/workflows/reusable-build-image.yml
+#
+#  test:
+#    needs:
+#      - build
+#    uses: ./.github/workflows/reusable-run-tests.yaml.yml
+#    with:
+#      image_tag: ${{ needs.build.outputs.image_tag }}
+#
+#  publish:
+#    needs:
+#      - build
+#      - test
+#    if: github.event_name == 'push' && (startsWith(github.ref, 'refs/tags/v') || github.ref == 'refs/heads/master')
+#    uses: ./.github/workflows/reusable-push-image.yml
+#    with:
+#      registry: ${{ vars.DOCKER_REGISTRY }}
+#      image_tag: ${{ needs.build.outputs.image_tag }}
+#    secrets:
+#      DOCKER_HUB_USERNAME: ${{ secrets.DOCKER_HUB_USERNAME }}
+#      DOCKER_HUB_ACCESS_TOKEN: ${{ secrets.DOCKER_HUB_ACCESS_TOKEN }}
