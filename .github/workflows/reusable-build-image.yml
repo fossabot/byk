@@ -22,10 +22,10 @@ jobs:
         id: meta
         uses: docker/metadata-action@v4
         with:
-          images: byk-server-server
+          images: ${{ vars.DOCKER_REGISTRY }}/${{ vars.IMAGE_NAME }}
           tags: |
             type=ref,event=tag
-            type=edge,branch=master
+            type=edge,branch=master,enable=false
             type=raw,value=latest,enable=${{ github.ref == 'refs/heads/master' }}
             type=sha,format=short,event=pr
 
